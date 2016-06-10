@@ -5,54 +5,29 @@ export enum ACTIONS {
     UPDATE_THRESHOLD
 }
 
-
-
-//////////////////
-// Action Types //
-//////////////////
-
 interface Action { type: ACTIONS }
 
-interface ActionAddTile extends Action {}
-
-interface ActionRemoveTile extends Action {
-    id: number;
+export interface ActionTilesGrid extends Action {
+    id?: number;   
 }
 
-export type TilesGridActions = ActionAddTile | ActionRemoveTile;
-
-interface ActionUpdateAmount extends Action {
-    amount: number;
+export interface ActionTile extends Action {
+    amount?: number;
+    threshold?: number;
 }
 
-interface ActionUpdateThreshold extends Action {
-    threshold: number;
-}
-
-export type TileActions = ActionUpdateAmount | ActionUpdateThreshold;
-
-
-
-/////////////////////
-// Action Creators //
-/////////////////////
-
-// TilesGrid action creators
-export const addTile = (): ActionAddTile => {
+export const addTile = (): ActionTilesGrid => {
 	return { type: ACTIONS.ADD_TILE };
 }
 
-export const removeTile = (id: number): ActionRemoveTile => {
+export const removeTile = (id: number): ActionTilesGrid => {
 	return { type: ACTIONS.REMOVE_TILE, id };
 }
 
-
-
-// Tile action creators
-export const updateAmount = (amount: number): ActionUpdateAmount => {
+export const updateAmount = (amount: number): ActionTile => {
 	return { type: ACTIONS.UPDATE_AMOUNT, amount };
 }
 
-export const updateThreshold = (threshold: number): ActionUpdateThreshold => {
+export const updateThreshold = (threshold: number): ActionTile => {
 	return { type: ACTIONS.UPDATE_THRESHOLD, threshold };
 }

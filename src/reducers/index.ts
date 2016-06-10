@@ -1,20 +1,13 @@
 import 'es6-shim'
 import {
 	ACTIONS,
-	TilesGridActions,
-	TileActions
+	ActionTilesGrid,
+	ActionTile
 } from '../actions'
 import Tile from '../models/tile'
 import * as utils from '../utils'
 
-
-
-//////////////
-// Reducers //
-//////////////
-
-// TilesGrid reducer
-export const tilesGrid = (state: Tile[] = [], action: TilesGridActions): Tile[] => {
+export const tilesGrid = (state: Tile[] = [], action: ActionTilesGrid): Tile[] => {
 
 	switch (action.type) {
 		case ACTIONS.ADD_TILE:
@@ -34,8 +27,7 @@ export const tilesGrid = (state: Tile[] = [], action: TilesGridActions): Tile[] 
 
 }
 
-// Tile reducer
-export const tile = (state: Tile, action: TileActions): Tile => {
+export const tile = (state: Tile, action: ActionTile): Tile => {
 
 	switch (action.type) {
 		case ACTIONS.UPDATE_AMOUNT:
