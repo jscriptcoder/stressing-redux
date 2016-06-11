@@ -1,4 +1,5 @@
 import 'es6-shim'
+import { combineReducers } from 'redux'
 import {
 	ACTIONS,
 	ActionTilesGrid,
@@ -36,7 +37,6 @@ export const tile = (state: Tile, action: ActionTile): Tile => {
 				amount: action.amount,
 				threshold: state.threshold
 			});
-			break;
 
 		case ACTIONS.UPDATE_THRESHOLD:
 			return Object.assign(new Tile(), {
@@ -44,10 +44,11 @@ export const tile = (state: Tile, action: ActionTile): Tile => {
 				amount: state.amount,
 				threshold: action.threshold
 			});
-			break;
 
 		default:
 			return state;
 	}
 
 }
+
+export default combineReducers({ tilesGrid, tile });

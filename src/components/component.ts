@@ -7,9 +7,17 @@ abstract class Component {
 		this.container = container;
 	}
 
+	public get element(): HTMLElement {
+		return this.el;
+	}
+
 	public findElement(selector: string): HTMLElement {
 		const root = this.el || this.container;
 		return <HTMLElement>root.querySelector(selector);
+	}
+
+	public remove(): void {
+		this.container.removeChild(this.el);
 	}
 
 	protected abstract buildDOM(): void;

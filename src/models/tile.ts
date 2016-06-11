@@ -3,3 +3,5 @@ export default class Tile {
 	public amount: number;
 	public threshold: number;
 }
+
+export type TileModel = Tile;
