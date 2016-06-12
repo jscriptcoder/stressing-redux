@@ -20,3 +20,5 @@ class ServiceAmount {
 	}
 
 }
+
+export const serviceAmount = new ServiceAmount();

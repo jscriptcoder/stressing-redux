@@ -49,8 +49,8 @@
 	var actions = __webpack_require__(15);
 	var reducers_1 = __webpack_require__(16);
 	var tiles_grid_1 = __webpack_require__(20);
-	var store = redux_1.createStore(reducers_1["default"]);
-	var tilesGrid = new tiles_grid_1["default"](document.getElementById('tiles-grid'));
+	var store = redux_1.createStore(reducers_1.default);
+	var tilesGrid = new tiles_grid_1.default(document.getElementById('tiles-grid'));
 	tilesGrid.onbuttonclick = function () {
 	    store.dispatch(actions.addTile());
 	};
@@ -1041,7 +1041,7 @@
 	    switch (action.type) {
 	        case actions_1.ACTIONS.ADD_TILE:
 	            var newState = state.slice();
-	            newState.push(Object.assign(new tile_1["default"](), {
+	            newState.push(Object.assign(new tile_1.default(), {
 	                id: utils.uid(),
 	                threshold: utils.random(40, 50)
 	            }));
@@ -1055,13 +1055,13 @@
 	exports.tile = function (state, action) {
 	    switch (action.type) {
 	        case actions_1.ACTIONS.UPDATE_AMOUNT:
-	            return Object.assign(new tile_1["default"](), {
+	            return Object.assign(new tile_1.default(), {
 	                id: state.id,
 	                amount: action.amount,
 	                threshold: state.threshold
 	            });
 	        case actions_1.ACTIONS.UPDATE_THRESHOLD:
-	            return Object.assign(new tile_1["default"](), {
+	            return Object.assign(new tile_1.default(), {
 	                id: state.id,
 	                amount: state.amount,
 	                threshold: action.threshold
@@ -1070,8 +1070,8 @@
 	            return state;
 	    }
 	};
-	exports.__esModule = true;
-	exports["default"] = redux_1.combineReducers({ tilesGrid: exports.tilesGrid, tile: exports.tile });
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.default = redux_1.combineReducers({ tilesGrid: exports.tilesGrid, tile: exports.tile });
 
 
 /***/ },
@@ -4868,8 +4868,8 @@
 	    }
 	    return Tile;
 	}());
-	exports.__esModule = true;
-	exports["default"] = Tile;
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.default = Tile;
 
 
 /***/ },
@@ -4906,7 +4906,7 @@
 	        this.buildDOM();
 	    }
 	    TilesGrid.prototype.buildDOM = function () {
-	        this.el = component_1["default"].string2Element(TILES_GRID_TMPL);
+	        this.el = component_1.default.string2Element(TILES_GRID_TMPL);
 	        this.buttonEl = this.findElement('button');
 	        this.listEl = this.findElement('.list');
 	        this.clickSubscription = Observable_1.Observable
@@ -4917,7 +4917,7 @@
 	    // must be set outside
 	    TilesGrid.prototype.onbuttonclick = function () { };
 	    TilesGrid.prototype.addTile = function (tileModel) {
-	        var tile = new tile_1["default"](this.listEl, "" + tileModel.id);
+	        var tile = new tile_1.default(this.listEl, "" + tileModel.id);
 	        tile.amount = "" + tileModel.amount;
 	        tile.threshold = "" + tileModel.threshold;
 	        this.tiles.push(tile);
@@ -4935,9 +4935,9 @@
 	        this.clickSubscription.unsubscribe();
 	    };
 	    return TilesGrid;
-	}(component_1["default"]));
-	exports.__esModule = true;
-	exports["default"] = TilesGrid;
+	}(component_1.default));
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.default = TilesGrid;
 
 
 /***/ },
@@ -5848,8 +5848,8 @@
 	    };
 	    return Component;
 	}());
-	exports.__esModule = true;
-	exports["default"] = Component;
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.default = Component;
 
 
 /***/ },
@@ -5875,7 +5875,7 @@
 	        this.buildDOM();
 	    }
 	    Tile.prototype.buildDOM = function () {
-	        this.el = component_1["default"].string2Element(TILE_TMPL);
+	        this.el = component_1.default.string2Element(TILE_TMPL);
 	        this.closeEl = this.findElement('.close');
 	        this.amountEl = this.findElement('.amount');
 	        this.rangeEl = this.findElement('input');
@@ -5911,9 +5911,9 @@
 	        this.rangeSubscription.unsubscribe();
 	    };
 	    return Tile;
-	}(component_1["default"]));
-	exports.__esModule = true;
-	exports["default"] = Tile;
+	}(component_1.default));
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.default = Tile;
 
 
 /***/ },

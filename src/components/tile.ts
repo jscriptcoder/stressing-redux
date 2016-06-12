@@ -18,14 +18,14 @@ const TILE_TMPL = `
 
 export default class Tile extends Component {
 
-	public id: string;
+	public id: number;
 	private closeEl: HTMLElement;
 	private amountEl: HTMLElement;
 	private rangeEl: HTMLInputElement;
 	private closeSubscription: Subscription;
 	private rangeSubscription: Subscription;
 
-	constructor(container: HTMLElement, id: string) {
+	constructor(container: HTMLElement, id: number) {
 		super(container);
 		this.id = id;
 		this.buildDOM();
@@ -42,11 +42,11 @@ export default class Tile extends Component {
 		this.closeSubscription = Observable
 			.fromEvent(this.closeEl, 'click')
 			//.first() // will dispose after the first value
-			.subscribe(this.oncloseclick)
+			.subscribe(() => this.oncloseclick())
 
 		this.rangeSubscription = Observable
 			.fromEvent(this.rangeEl, 'change')
-			.subscribe(this.onrangechange);
+			.subscribe(() => this.onrangechange());
 
 		this.container.appendChild(this.el);
 	}
@@ -55,12 +55,20 @@ export default class Tile extends Component {
 	public oncloseclick(): void {}
 	public onrangechange(): void {}
 
-	public set amount(amount: string) {
-		this.amountEl.textContent = amount;
+	public set amount(amount: number) {
+		this.amountEl.textContent = typeof amount === 'undefined' ? '' : `${amount}`;
 	}
 
-	public set threshold(threshold: string) {
-		this.rangeEl.value = threshold;
+	public get amount(): number {
+		return +this.amountEl.textContent;
+	}
+
+	public set threshold(threshold: number) {
+		this.rangeEl.value = `${threshold}`;
+	}
+
+	public get threshold(): number {
+		return +this.rangeEl.value;
 	}
 
 	public destroy(): void {

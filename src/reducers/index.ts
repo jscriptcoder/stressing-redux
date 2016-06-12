@@ -1,44 +1,23 @@
 import 'es6-shim'
-import { combineReducers } from 'redux'
 import {
 	ACTIONS,
-	ActionTilesGrid,
-	ActionTile
+	ActionTilesGrid
 } from '../actions'
+import TilesGrid from '../models/tiles-grid'
 import Tile from '../models/tile'
 import * as utils from '../utils'
 
-export const tilesGrid = (state: Tile[] = [], action: ActionTilesGrid): Tile[] => {
+const tileReducer = (state: Tile = new Tile(), action: ActionTilesGrid): Tile => {
 
 	switch (action.type) {
-		case ACTIONS.ADD_TILE:
-			let newState = state.slice();
-			newState.push(Object.assign(new Tile(), {
-				id: utils.uid(),
-				threshold: utils.random(40, 50)
-			}));
-			return newState;
-		
-		case ACTIONS.REMOVE_TILE:
-			return state.filter((tile: Tile) => tile.id !== action.id);
-
-		default:
-			return state;
-	}
-
-}
-
-export const tile = (state: Tile, action: ActionTile): Tile => {
-
-	switch (action.type) {
-		case ACTIONS.UPDATE_AMOUNT:
+		case ACTIONS.UPDATE_TILE_AMOUNT:
 			return Object.assign(new Tile(), {
 				id: state.id,
 				amount: action.amount,
 				threshold: state.threshold
 			});
 
-		case ACTIONS.UPDATE_THRESHOLD:
+		case ACTIONS.UPDATE_TILE_THRESHOLD:
 			return Object.assign(new Tile(), {
 				id: state.id,
 				amount: state.amount,
@@ -51,4 +30,32 @@ export const tile = (state: Tile, action: ActionTile): Tile => {
 
 }
 
-export default combineReducers({ tilesGrid, tile });
+const tilesGridReducer = (state: Tile[] = [], action: ActionTilesGrid): Tile[] => {
+	let newState: Tile[];
+
+	switch (action.type) {
+		case ACTIONS.ADD_TILE:
+			newState = [...state];
+			newState.push(Object.assign(new Tile(), {
+				id: utils.uid(),
+				threshold: utils.random(40, 50)
+			}));
+			return newState;
+		
+		case ACTIONS.REMOVE_TILE:
+			return state.filter((tile: Tile) => tile.id !== action.id);
+
+		case ACTIONS.UPDATE_TILE_AMOUNT:
+		case ACTIONS.UPDATE_TILE_THRESHOLD:
+			newState = [...state];
+			const tileIndex = newState.findIndex((tile: Tile) => tile.id === action.id);
+			newState[tileIndex] = tileReducer(newState[tileIndex], action);
+			return newState;
+
+		default:
+			return state;
+	}
+
+}
+
+export default tilesGridReducer;

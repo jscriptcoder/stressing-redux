@@ -33,25 +33,36 @@ export default class TilesGrid extends Component {
 
 		this.clickSubscription = Observable
 			.fromEvent(this.buttonEl, 'click')
-			.subscribe(this.onbuttonclick);
+			.subscribe(() => this.onbuttonclick());
 
 		this.container.appendChild(this.el);
 	}
 
 	// must be set outside
-	public onbuttonclick(): void {}
+	public onbuttonclick(): void { }
+	public ontilecloseclick(tileId: number): void { }
+	public ontilerangechange(tileId: number, threshold: number): void { }
 
 	public addTile(tileModel: TileModel): void {
-		let tile = new Tile(this.listEl, `${tileModel.id}`);
-		tile.amount = `${tileModel.amount}`;
-		tile.threshold = `${tileModel.threshold}`;
+		const tile = new Tile(this.listEl, tileModel.id);
+
+		tile.amount = tileModel.amount;
+		tile.threshold = tileModel.threshold;
+		tile.oncloseclick = () => this.ontilecloseclick(tile.id);
+		tile.onrangechange = () => this.ontilerangechange(tile.id, tile.threshold);
+
 		this.tiles.push(tile);
 	}
 
-	public removeTile(id: string) {
+	public removeTile(id: number) {
 		const tileIdx = this.tiles.findIndex((tile: Tile) => tile.id === id);
 		const tile = this.tiles.splice(tileIdx, 1)[0];
 		tile.destroy();
+	}
+
+	public updateTileAmount(tileId: number, amount: number): void {
+		const tile = this.tiles.find((tile: Tile) => tile.id === tileId);
+		tile.amount = amount;
 	}
 
 	public destroy(): void {
