@@ -3,7 +3,6 @@ import {
 	ACTIONS,
 	ActionTilesGrid
 } from '../actions'
-import TilesGrid from '../models/tiles-grid'
 import Tile from '../models/tile'
 import * as utils from '../utils'
 
@@ -38,7 +37,7 @@ const tilesGridReducer = (state: Tile[] = [], action: ActionTilesGrid): Tile[] =
 			newState = [...state];
 			newState.push(Object.assign(new Tile(), {
 				id: utils.uid(),
-				threshold: utils.random(40, 50)
+				threshold: utils.random(40, 60)
 			}));
 			return newState;
 		

@@ -1,3 +1,4 @@
+import './tiles-grid.scss'
 import 'rxjs/add/observable/fromEvent'
 import { Observable } from 'rxjs/Observable'
 import { Subscription } from 'rxjs/Subscription'
@@ -13,6 +14,10 @@ const TILES_GRID_TMPL = `
 	<div class="list"></div>
 </div>
 `;
+
+const doSomeMagic = (value: number, deltaValue: number, distance: number): number => {
+	return value + Math.round(deltaValue / (distance * 1.25));
+}
 
 export default class TilesGrid extends Component {
 
@@ -63,6 +68,41 @@ export default class TilesGrid extends Component {
 	public updateTileAmount(tileId: number, amount: number): void {
 		const tile = this.tiles.find((tile: Tile) => tile.id === tileId);
 		tile.amount = amount;
+	}
+
+	public updateOtherTilesThreshold(tileId: number, deltaThreshold: number): void {
+		const tileIndex = this.tiles.findIndex((tile: Tile) => tile.id === tileId);
+		const len = this.tiles.length;
+		let doneLeft = false, idxLeft: number,
+			doneRight = false, idxRight: number,
+			pos = 1;
+
+		while(!doneLeft || !doneRight) {
+			idxLeft = tileIndex - pos;
+			idxRight = tileIndex + pos;
+
+			if (idxLeft >= 0) { // updates ranges on the left
+				this.tiles[idxLeft].threshold = doSomeMagic(
+					this.tiles[idxLeft].threshold, 
+					deltaThreshold, 
+					pos
+				);
+			} else {
+				doneLeft = true;
+			}
+
+			if (idxRight < len) { // updates ranges on the right
+				this.tiles[idxRight].threshold = doSomeMagic(
+					this.tiles[idxRight].threshold, 
+					deltaThreshold, 
+					pos
+				);
+			} else {
+				doneRight = true;
+			}
+
+			pos++;
+		}
 	}
 
 	public destroy(): void {

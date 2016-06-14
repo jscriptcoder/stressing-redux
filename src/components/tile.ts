@@ -1,3 +1,4 @@
+import './tile.scss'
 import 'rxjs/add/observable/fromEvent'
 import 'rxjs/add/operator/first'
 import { Observable } from 'rxjs/Observable'
@@ -6,12 +7,12 @@ import Component from './component'
 
 const TILE_TMPL = `
 <div class="tile">
-	<a href="#" class="close">[&times;]</a>
+	<a href="#" class="close">&times;</a>
 	<div class="row">
 		<div class="amount">
 	</div>
 	<div class="row">
-		<input type="range" min="1" max="100" />
+		<input type="range" min="0" max="100" />
 	</div>
 </div>
 `;

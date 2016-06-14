@@ -8,7 +8,7 @@ class ServiceAmount {
 	private createObservable(): Observable<number> {
 		return Observable.create((observer: Observer<number>) => {
 			const interval = random(200, 2000);
-			const timerId = setInterval(() => observer.next(random(1, 100)), interval);
+			const timerId = setInterval(() => observer.next(random(0, 100)), interval);
 			return () => clearInterval(timerId);
 		});
 	}
