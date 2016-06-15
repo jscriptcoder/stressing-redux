@@ -137,7 +137,7 @@
 
 
 	// module
-	exports.push([module.id, "", ""]);
+	exports.push([module.id, "* {\n  box-sizing: border-box; }\n\nhtml, body {\n  margin: 0;\n  padding: 0;\n  height: 100%; }\n\nbody {\n  background-color: lightgrey; }\n", ""]);
 
 	// exports
 
@@ -2216,20 +2216,19 @@
 	};
 	var tilesGridReducer = function (state, action) {
 	    if (state === void 0) { state = []; }
-	    var newState;
 	    switch (action.type) {
 	        case actions_1.ACTIONS.ADD_TILE:
-	            newState = state.slice();
-	            newState.push(Object.assign(new tile_1.default(), {
-	                id: utils.uid(),
-	                threshold: utils.random(40, 60)
-	            }));
-	            return newState;
+	            return state.concat([
+	                Object.assign(new tile_1.default(), {
+	                    id: utils.uid(),
+	                    threshold: utils.random(40, 60)
+	                })
+	            ]);
 	        case actions_1.ACTIONS.REMOVE_TILE:
 	            return state.filter(function (tile) { return tile.id !== action.id; });
 	        case actions_1.ACTIONS.UPDATE_TILE_AMOUNT:
 	        case actions_1.ACTIONS.UPDATE_TILE_THRESHOLD:
-	            newState = state.slice();
+	            var newState = state.slice();
 	            var tileIndex = newState.findIndex(function (tile) { return tile.id === action.id; });
 	            newState[tileIndex] = tileReducer(newState[tileIndex], action);
 	            return newState;
@@ -6055,6 +6054,9 @@
 	var component_1 = __webpack_require__(45);
 	var tile_1 = __webpack_require__(46);
 	var TILES_GRID_TMPL = "\n<div class=\"tiles-grid\">\n\t<div class=\"actions\">\n\t\t<button>Add Tile</button>\n\t</div>\n\t<div class=\"list\"></div>\n</div>\n";
+	var doSomeMagic = function (value, deltaValue, distance) {
+	    return value + Math.round(deltaValue / (distance * 1.25));
+	};
 	var TilesGrid = (function (_super) {
 	    __extends(TilesGrid, _super);
 	    function TilesGrid(container) {
@@ -6095,12 +6097,25 @@
 	        tile.amount = amount;
 	    };
 	    TilesGrid.prototype.updateOtherTilesThreshold = function (tileId, deltaThreshold) {
-	        var increment = Math.round(deltaThreshold / this.tiles.length);
-	        for (var _i = 0, _a = this.tiles; _i < _a.length; _i++) {
-	            var tile = _a[_i];
-	            if (tile.id !== tileId) {
-	                tile.threshold += increment;
+	        var tileIndex = this.tiles.findIndex(function (tile) { return tile.id === tileId; });
+	        var len = this.tiles.length;
+	        var doneLeft = false, idxLeft, doneRight = false, idxRight, pos = 1;
+	        while (!doneLeft || !doneRight) {
+	            idxLeft = tileIndex - pos;
+	            idxRight = tileIndex + pos;
+	            if (idxLeft >= 0) {
+	                this.tiles[idxLeft].threshold = doSomeMagic(this.tiles[idxLeft].threshold, deltaThreshold, pos);
 	            }
+	            else {
+	                doneLeft = true;
+	            }
+	            if (idxRight < len) {
+	                this.tiles[idxRight].threshold = doSomeMagic(this.tiles[idxRight].threshold, deltaThreshold, pos);
+	            }
+	            else {
+	                doneRight = true;
+	            }
+	            pos++;
 	        }
 	    };
 	    TilesGrid.prototype.destroy = function () {
@@ -6351,7 +6366,7 @@
 	__webpack_require__(49);
 	var Observable_1 = __webpack_require__(20);
 	var component_1 = __webpack_require__(45);
-	var TILE_TMPL = "\n<div class=\"tile\">\n\t<a href=\"#\" class=\"close\">[&times;]</a>\n\t<div class=\"row\">\n\t\t<div class=\"amount\">\n\t</div>\n\t<div class=\"row\">\n\t\t<input type=\"range\" min=\"0\" max=\"100\" />\n\t</div>\n</div>\n";
+	var TILE_TMPL = "\n<div class=\"tile\">\n\t<a href=\"#\" class=\"close\">&times;</a>\n\t<div class=\"row\">\n\t\t<div class=\"amount\">\n\t</div>\n\t<div class=\"row\">\n\t\t<input type=\"range\" min=\"0\" max=\"100\" />\n\t</div>\n</div>\n";
 	var Tile = (function (_super) {
 	    __extends(Tile, _super);
 	    function Tile(container, id) {
@@ -6377,12 +6392,23 @@
 	    // must be set outside
 	    Tile.prototype.oncloseclick = function () { };
 	    Tile.prototype.onrangechange = function () { };
+	    Tile.prototype.validate = function (amount) {
+	        if (amount > this.threshold && !this.alert) {
+	            this.el.classList.add('alert');
+	            this.alert = true;
+	        }
+	        else if (amount <= this.threshold && this.alert) {
+	            this.el.classList.remove('alert');
+	            this.alert = false;
+	        }
+	    };
 	    Object.defineProperty(Tile.prototype, "amount", {
 	        get: function () {
 	            return +this.amountEl.textContent;
 	        },
 	        set: function (amount) {
 	            this.amountEl.textContent = typeof amount === 'undefined' ? '' : "" + amount;
+	            this.validate(amount);
 	        },
 	        enumerable: true,
 	        configurable: true
@@ -6443,7 +6469,7 @@
 
 
 	// module
-	exports.push([module.id, ".tile {\n  float: left; }\n", ""]);
+	exports.push([module.id, ".tile {\n  position: relative;\n  float: left;\n  margin: 5px;\n  padding: 10px;\n  width: 200px;\n  height: 200px;\n  border-radius: 5px;\n  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.4);\n  background-color: #5cb85c; }\n  .tile.alert {\n    background-color: #aaffff; }\n  .tile .close {\n    position: absolute;\n    top: 5px;\n    right: 5px;\n    text-decoration: none;\n    font-size: 24px;\n    font-weight: bold; }\n  .tile .amount {\n    text-align: center;\n    font-family: monospace;\n    font-size: 100px;\n    height: 120px;\n    line-height: 120px;\n    color: lightgrey; }\n  .tile input {\n    width: 100%; }\n", ""]);
 
 	// exports
 
