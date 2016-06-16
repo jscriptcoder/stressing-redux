@@ -20,7 +20,7 @@ const TILE_TMPL = `
 export default class Tile extends Component {
 
 	public id: number;
-    public alert: boolean;
+	public alert: boolean;
 	private closeEl: HTMLElement;
 	private amountEl: HTMLElement;
 	private rangeEl: HTMLInputElement;
@@ -57,15 +57,15 @@ export default class Tile extends Component {
 	public oncloseclick(): void {}
 	public onrangechange(): void {}
 
-    private validate(amount: number): void {
-        if (amount > this.threshold && !this.alert) {
-            this.el.classList.add('alert');
-            this.alert = true;
-        } else if (amount <= this.threshold && this.alert) {
-            this.el.classList.remove('alert');
-            this.alert = false;
-        }
-    }
+	private validate(amount: number): void {
+		if (amount > this.threshold && !this.alert) {
+			this.el.classList.add('alert');
+			this.alert = true;
+		} else if (amount <= this.threshold && this.alert) {
+			this.el.classList.remove('alert');
+			this.alert = false;
+		}
+	}
 
 	public set amount(amount: number) {
 		this.amountEl.textContent = typeof amount === 'undefined' ? '' : `${amount}`;

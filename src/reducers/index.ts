@@ -33,12 +33,12 @@ const tilesGridReducer = (state: Tile[] = [], action: ActionTilesGrid): Tile[] =
 
 		case ACTIONS.ADD_TILE:
 			return [
-                ...state,
-                Object.assign(new Tile(), {
-				    id: utils.uid(),
-				    threshold: utils.random(40, 60)
-			    })
-            ];
+				...state,
+				Object.assign(new Tile(), {
+					id: utils.uid(),
+					threshold: utils.random(40, 60)
+				})
+			];
 		
 		case ACTIONS.REMOVE_TILE:
 			return state.filter((tile: Tile) => tile.id !== action.id);

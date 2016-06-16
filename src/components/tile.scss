@@ -7,15 +7,15 @@
 	height: 200px;
 	border-radius: 5px;
 	box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.4);
-    color: #3c763d;
-    background-color: #dff0d8;
-    border-color: #d6e9c6;
+	color: #3c763d;
+	background-color: #dff0d8;
+	border-color: #d6e9c6;
 
-    &.alert {
-    	color: #8a6d3b;
-    	background-color: #fcf8e3;
-    	border-color: #faebcc;
-    }
+	&.alert {
+		color: #8a6d3b;
+		background-color: #fcf8e3;
+		border-color: #faebcc;
+	}
 
 	.close {
 		position: absolute;
