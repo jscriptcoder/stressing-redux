@@ -47,7 +47,7 @@ export default class Tile extends Component {
 			.subscribe(() => this.oncloseclick())
 
 		this.rangeSubscription = Observable
-			.fromEvent(this.rangeEl, 'change')
+			.fromEvent(this.rangeEl, 'input')
 			.subscribe(() => this.onrangechange());
 
 		this.container.appendChild(this.el);
