@@ -10,19 +10,21 @@ const TILES_GRID_TMPL = `
 <div class="tiles-grid">
 	<div class="actions">
 		<button>Add Tile</button>
+		<input type="number" value="1"/>
 	</div>
 	<div class="list"></div>
 </div>
 `;
 
 const doSomeMagic = (value: number, deltaValue: number, distance: number): number => {
-	return value + Math.round(deltaValue / (distance * 1.25));
+	return value + Math.round(deltaValue / (distance * 1.2));
 }
 
 export default class TilesGrid extends Component {
 
 	private tiles: Tile[] = [];
 	private buttonEl: HTMLElement;
+	private inputEl: HTMLInputElement;
 	private listEl: HTMLElement;
 	private clickSubscription: Subscription;
 
@@ -34,17 +36,21 @@ export default class TilesGrid extends Component {
 	protected buildDOM(): void {
 		this.el = Component.string2Element(TILES_GRID_TMPL);
 		this.buttonEl = this.findElement('button');
+		this.inputEl = <HTMLInputElement>this.findElement('input');
 		this.listEl = this.findElement('.list');
 
 		this.clickSubscription = Observable
 			.fromEvent(this.buttonEl, 'click')
-			.subscribe(() => this.onbuttonclick());
+			.subscribe(() => {
+				const numTiles = +this.inputEl.value || 1;
+				this.onbuttonclick(numTiles);
+			});
 
 		this.container.appendChild(this.el);
 	}
 
 	// must be set outside
-	public onbuttonclick(): void { }
+	public onbuttonclick(howMany: number): void { }
 	public ontilecloseclick(tileId: number): void { }
 	public ontilerangechange(tileId: number, threshold: number): void { }
 
@@ -77,7 +83,7 @@ export default class TilesGrid extends Component {
 			doneRight = false, idxRight: number,
 			pos = 1;
 
-		while(!doneLeft || !doneRight) {
+		while(!(doneLeft && doneRight)) {
 			idxLeft = tileIndex - pos;
 			idxRight = tileIndex + pos;
 

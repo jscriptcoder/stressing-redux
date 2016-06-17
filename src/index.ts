@@ -9,8 +9,11 @@ appStore.subscribe((newState: TilesGridState, oldState: TilesGridState) => {
 
 		if (appStore.isNewItem()) {
 
-			const newTile = newState[newState.length - 1];
-			view.addTile(newTile);
+			const howMany = newState.length - oldState.length;
+			const sliceIdx = newState.length - howMany;
+			let newTiles = newState.slice(sliceIdx);
+
+			for(let tile of newTiles) view.addTile(tile);
 
 		} else if (appStore.isItemDeleted()) {
 

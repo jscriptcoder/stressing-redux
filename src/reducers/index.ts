@@ -28,6 +28,7 @@ const tileReducer = (state: Tile = new Tile(), action: ActionTilesGrid): Tile =>
 }
 
 const tilesGridReducer = (state: Tile[] = [], action: ActionTilesGrid): Tile[] => {
+	let newState: Tile[];
 
 	switch (action.type) {
 
@@ -40,12 +41,23 @@ const tilesGridReducer = (state: Tile[] = [], action: ActionTilesGrid): Tile[] =
 				})
 			];
 		
+		case ACTIONS.ADD_TILES:
+			newState = [...state];
+			let count = action.howMany || 1;
+			while (count--) {
+				newState.push(Object.assign(new Tile(), {
+					id: utils.uid(),
+					threshold: utils.random(40, 60)
+				}));
+			}
+			return newState;
+
 		case ACTIONS.REMOVE_TILE:
 			return state.filter((tile: Tile) => tile.id !== action.id);
 
 		case ACTIONS.UPDATE_TILE_AMOUNT:
 		case ACTIONS.UPDATE_TILE_THRESHOLD:
-			let newState = [...state];
+			newState = [...state];
 			const tileIndex = newState.findIndex((tile: Tile) => tile.id === action.id);
 			newState[tileIndex] = tileReducer(newState[tileIndex], action);
 			return newState;

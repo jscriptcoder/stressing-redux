@@ -6,7 +6,7 @@ import TilesGrid from './components/tiles-grid'
 
 const tilesGrid = new TilesGrid(document.getElementById('tiles-grid'));
 
-tilesGrid.onbuttonclick = () => appStore.dispatch(actions.addTile());
+tilesGrid.onbuttonclick = (howMany: number) => appStore.dispatch(actions.addTiles(howMany));
 tilesGrid.ontilecloseclick = (tileId: number) => appStore.dispatch(actions.removeTile(tileId));
 tilesGrid.ontilerangechange = (tileId: number, threshold: number) => {
 	appStore.dispatch(actions.updateTileThreshold(tileId, threshold));

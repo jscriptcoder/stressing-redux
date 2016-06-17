@@ -51,8 +51,13 @@
 	store_1.appStore.subscribe(function (newState, oldState) {
 	    if (store_1.appStore.stateHasChanged()) {
 	        if (store_1.appStore.isNewItem()) {
-	            var newTile = newState[newState.length - 1];
-	            view.addTile(newTile);
+	            var howMany = newState.length - oldState.length;
+	            var sliceIdx = newState.length - howMany;
+	            var newTiles = newState.slice(sliceIdx);
+	            for (var _i = 0, newTiles_1 = newTiles; _i < newTiles_1.length; _i++) {
+	                var tile = newTiles_1[_i];
+	                view.addTile(tile);
+	            }
 	        }
 	        else if (store_1.appStore.isItemDeleted()) {
 	            var oldTile = oldState.find(function (tile) { return newState.indexOf(tile) === -1; });
@@ -431,9 +436,12 @@
 	        this.oldState = this.store.getState();
 	    }
 	    AppStore.prototype.subscribe = function (listener) {
-	        var newState = this.store.getState();
-	        listener(newState, this.oldState);
-	        this.oldState = newState;
+	        var _this = this;
+	        this.store.subscribe(function () {
+	            var newState = _this.store.getState();
+	            listener(newState, _this.oldState);
+	            _this.oldState = newState;
+	        });
 	    };
 	    AppStore.prototype.dispatch = function (action) {
 	        this.store.dispatch(action);
@@ -1422,6 +1430,7 @@
 	};
 	var tilesGridReducer = function (state, action) {
 	    if (state === void 0) { state = []; }
+	    var newState;
 	    switch (action.type) {
 	        case actions_1.ACTIONS.ADD_TILE:
 	            return state.concat([
@@ -1430,11 +1439,21 @@
 	                    threshold: utils.random(40, 60)
 	                })
 	            ]);
+	        case actions_1.ACTIONS.ADD_TILES:
+	            newState = state.slice();
+	            var count = action.howMany || 1;
+	            while (count--) {
+	                newState.push(Object.assign(new tile_1.default(), {
+	                    id: utils.uid(),
+	                    threshold: utils.random(40, 60)
+	                }));
+	            }
+	            return newState;
 	        case actions_1.ACTIONS.REMOVE_TILE:
 	            return state.filter(function (tile) { return tile.id !== action.id; });
 	        case actions_1.ACTIONS.UPDATE_TILE_AMOUNT:
 	        case actions_1.ACTIONS.UPDATE_TILE_THRESHOLD:
-	            var newState = state.slice();
+	            newState = state.slice();
 	            var tileIndex = newState.findIndex(function (tile) { return tile.id === action.id; });
 	            newState[tileIndex] = tileReducer(newState[tileIndex], action);
 	            return newState;
@@ -5237,13 +5256,17 @@
 	"use strict";
 	(function (ACTIONS) {
 	    ACTIONS[ACTIONS["ADD_TILE"] = 0] = "ADD_TILE";
-	    ACTIONS[ACTIONS["REMOVE_TILE"] = 1] = "REMOVE_TILE";
-	    ACTIONS[ACTIONS["UPDATE_TILE_AMOUNT"] = 2] = "UPDATE_TILE_AMOUNT";
-	    ACTIONS[ACTIONS["UPDATE_TILE_THRESHOLD"] = 3] = "UPDATE_TILE_THRESHOLD";
+	    ACTIONS[ACTIONS["ADD_TILES"] = 1] = "ADD_TILES";
+	    ACTIONS[ACTIONS["REMOVE_TILE"] = 2] = "REMOVE_TILE";
+	    ACTIONS[ACTIONS["UPDATE_TILE_AMOUNT"] = 3] = "UPDATE_TILE_AMOUNT";
+	    ACTIONS[ACTIONS["UPDATE_TILE_THRESHOLD"] = 4] = "UPDATE_TILE_THRESHOLD";
 	})(exports.ACTIONS || (exports.ACTIONS = {}));
 	var ACTIONS = exports.ACTIONS;
 	exports.addTile = function () {
 	    return { type: ACTIONS.ADD_TILE };
+	};
+	exports.addTiles = function (howMany) {
+	    return { type: ACTIONS.ADD_TILES, howMany: howMany };
 	};
 	exports.removeTile = function (id) {
 	    return { type: ACTIONS.REMOVE_TILE, id: id };
@@ -5278,7 +5301,10 @@
 
 	"use strict";
 	// generates unique ids
-	exports.uid = function () { return Date.now(); };
+	exports.uid = (function () {
+	    var inc = 0;
+	    return function () { return ++inc; };
+	})();
 	// generates random integers between min and max (inclusive)
 	exports.random = function (min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; };
 
@@ -5294,12 +5320,8 @@
 	var actions = __webpack_require__(22);
 	var tiles_grid_1 = __webpack_require__(41);
 	var tilesGrid = new tiles_grid_1.default(document.getElementById('tiles-grid'));
-	tilesGrid.onbuttonclick = function () {
-	    store_1.appStore.dispatch(actions.addTile());
-	};
-	tilesGrid.ontilecloseclick = function (tileId) {
-	    store_1.appStore.dispatch(actions.removeTile(tileId));
-	};
+	tilesGrid.onbuttonclick = function (howMany) { return store_1.appStore.dispatch(actions.addTiles(howMany)); };
+	tilesGrid.ontilecloseclick = function (tileId) { return store_1.appStore.dispatch(actions.removeTile(tileId)); };
 	tilesGrid.ontilerangechange = function (tileId, threshold) {
 	    store_1.appStore.dispatch(actions.updateTileThreshold(tileId, threshold));
 	};
@@ -5338,7 +5360,7 @@
 	    }
 	    ServiceAmount.prototype.createObservable = function () {
 	        return Observable_1.Observable.create(function (observer) {
-	            var interval = utils_1.random(200, 2000);
+	            var interval = utils_1.random(100, 1000);
 	            var timerId = setInterval(function () { return observer.next(utils_1.random(0, 100)); }, interval);
 	            return function () { return clearInterval(timerId); };
 	        });
@@ -6100,9 +6122,9 @@
 	var Observable_1 = __webpack_require__(27);
 	var component_1 = __webpack_require__(47);
 	var tile_1 = __webpack_require__(48);
-	var TILES_GRID_TMPL = "\n<div class=\"tiles-grid\">\n\t<div class=\"actions\">\n\t\t<button>Add Tile</button>\n\t</div>\n\t<div class=\"list\"></div>\n</div>\n";
+	var TILES_GRID_TMPL = "\n<div class=\"tiles-grid\">\n\t<div class=\"actions\">\n\t\t<button>Add Tile</button>\n\t\t<input type=\"number\" value=\"1\"/>\n\t</div>\n\t<div class=\"list\"></div>\n</div>\n";
 	var doSomeMagic = function (value, deltaValue, distance) {
-	    return value + Math.round(deltaValue / (distance * 1.25));
+	    return value + Math.round(deltaValue / (distance * 1.2));
 	};
 	var TilesGrid = (function (_super) {
 	    __extends(TilesGrid, _super);
@@ -6115,14 +6137,18 @@
 	        var _this = this;
 	        this.el = component_1.default.string2Element(TILES_GRID_TMPL);
 	        this.buttonEl = this.findElement('button');
+	        this.inputEl = this.findElement('input');
 	        this.listEl = this.findElement('.list');
 	        this.clickSubscription = Observable_1.Observable
 	            .fromEvent(this.buttonEl, 'click')
-	            .subscribe(function () { return _this.onbuttonclick(); });
+	            .subscribe(function () {
+	            var numTiles = +_this.inputEl.value || 1;
+	            _this.onbuttonclick(numTiles);
+	        });
 	        this.container.appendChild(this.el);
 	    };
 	    // must be set outside
-	    TilesGrid.prototype.onbuttonclick = function () { };
+	    TilesGrid.prototype.onbuttonclick = function (howMany) { };
 	    TilesGrid.prototype.ontilecloseclick = function (tileId) { };
 	    TilesGrid.prototype.ontilerangechange = function (tileId, threshold) { };
 	    TilesGrid.prototype.addTile = function (tileModel) {
@@ -6147,7 +6173,7 @@
 	        var tileIndex = this.tiles.findIndex(function (tile) { return tile.id === tileId; });
 	        var len = this.tiles.length;
 	        var doneLeft = false, idxLeft, doneRight = false, idxRight, pos = 1;
-	        while (!doneLeft || !doneRight) {
+	        while (!(doneLeft && doneRight)) {
 	            idxLeft = tileIndex - pos;
 	            idxRight = tileIndex + pos;
 	            if (idxLeft >= 0) {
@@ -6213,7 +6239,7 @@
 
 
 	// module
-	exports.push([module.id, "", ""]);
+	exports.push([module.id, ".tiles-grid .actions {\n  position: fixed;\n  top: 10px;\n  left: 10px;\n  border: 1px solid darkgrey;\n  border-radius: 5px;\n  padding: 10px;\n  background-color: white;\n  z-index: 2; }\n  .tiles-grid .actions input {\n    width: 80px; }\n", ""]);
 
 	// exports
 
@@ -6440,13 +6466,13 @@
 	    Tile.prototype.oncloseclick = function () { };
 	    Tile.prototype.onrangechange = function () { };
 	    Tile.prototype.validate = function (amount) {
-	        if (amount > this.threshold && !this.alert) {
-	            this.el.classList.add('alert');
-	            this.alert = true;
+	        if (amount > this.threshold && !this.warning) {
+	            this.el.classList.add('warning');
+	            this.warning = true;
 	        }
-	        else if (amount <= this.threshold && this.alert) {
-	            this.el.classList.remove('alert');
-	            this.alert = false;
+	        else if (amount <= this.threshold && this.warning) {
+	            this.el.classList.remove('warning');
+	            this.warning = false;
 	        }
 	    };
 	    Object.defineProperty(Tile.prototype, "amount", {
@@ -6516,7 +6542,7 @@
 
 
 	// module
-	exports.push([module.id, ".tile {\n  position: relative;\n  float: left;\n  margin: 5px;\n  padding: 10px;\n  width: 200px;\n  height: 200px;\n  border-radius: 5px;\n  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.4);\n  background-color: #5cb85c; }\n  .tile.alert {\n    background-color: #aaffff; }\n  .tile .close {\n    position: absolute;\n    top: 5px;\n    right: 5px;\n    text-decoration: none;\n    font-size: 24px;\n    font-weight: bold; }\n  .tile .amount {\n    text-align: center;\n    font-family: monospace;\n    font-size: 100px;\n    height: 120px;\n    line-height: 120px;\n    color: lightgrey; }\n  .tile input {\n    width: 100%; }\n", ""]);
+	exports.push([module.id, ".tile {\n  position: relative;\n  float: left;\n  margin: 10px;\n  padding: 10px;\n  width: 200px;\n  height: 200px;\n  border-radius: 5px;\n  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.4);\n  color: #3c763d;\n  background-color: #dff0d8;\n  border-color: #d6e9c6; }\n  .tile.warning {\n    color: #8a6d3b;\n    background-color: #fcf8e3;\n    border-color: #faebcc; }\n  .tile .close {\n    position: absolute;\n    top: 5px;\n    right: 5px;\n    text-decoration: none;\n    font-size: 24px;\n    font-weight: bold;\n    color: black;\n    border: 1px solid darkgray;\n    border-radius: 5px;\n    padding: 2px;\n    line-height: 18px;\n    background-color: lightgrey; }\n  .tile .amount {\n    text-align: center;\n    font-family: monospace;\n    font-size: 100px;\n    height: 120px;\n    line-height: 120px; }\n  .tile input {\n    width: 100%; }\n", ""]);
 
 	// exports
 
