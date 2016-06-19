@@ -10,7 +10,7 @@ const TILES_GRID_TMPL = `
 <div class="tiles-grid">
 	<div class="actions">
 		<button>Add Tile</button>
-		<input type="number" value="1"/>
+		<input type="number" value="1" max="1000" />
 	</div>
 	<div class="list"></div>
 </div>
