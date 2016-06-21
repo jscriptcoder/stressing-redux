@@ -5306,7 +5306,9 @@
 	    return function () { return ++inc; };
 	})();
 	// generates random integers between min and max (inclusive)
-	exports.random = function (min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; };
+	exports.random = function (min, max) {
+	    return Math.floor(Math.random() * (max - min + 1)) + min;
+	};
 
 
 /***/ },
@@ -6122,7 +6124,7 @@
 	var Observable_1 = __webpack_require__(27);
 	var component_1 = __webpack_require__(47);
 	var tile_1 = __webpack_require__(48);
-	var TILES_GRID_TMPL = "\n<div class=\"tiles-grid\">\n\t<div class=\"actions\">\n\t\t<button>Add Tile</button>\n\t\t<input type=\"number\" value=\"1\"/>\n\t</div>\n\t<div class=\"list\"></div>\n</div>\n";
+	var TILES_GRID_TMPL = "\n<div class=\"tiles-grid\">\n\t<div class=\"actions\">\n\t\t<button>Add Tile</button>\n\t\t<input type=\"number\" value=\"1\" max=\"1000\" />\n\t</div>\n\t<div class=\"list\"></div>\n</div>\n";
 	var doSomeMagic = function (value, deltaValue, distance) {
 	    return value + Math.round(deltaValue / (distance * 1.2));
 	};
@@ -6239,7 +6241,7 @@
 
 
 	// module
-	exports.push([module.id, ".tiles-grid .actions {\n  position: fixed;\n  top: 10px;\n  left: 10px;\n  border: 1px solid darkgrey;\n  border-radius: 5px;\n  padding: 10px;\n  background-color: white;\n  z-index: 2; }\n  .tiles-grid .actions input {\n    width: 80px; }\n", ""]);
+	exports.push([module.id, ".tiles-grid .actions {\n  position: fixed;\n  top: 10px;\n  left: 10px;\n  border: 1px solid darkgrey;\n  border-radius: 5px;\n  padding: 10px;\n  background-color: rgba(255, 255, 255, 0.4);\n  z-index: 2; }\n  .tiles-grid .actions input {\n    width: 60px; }\n", ""]);
 
 	// exports
 
@@ -6542,7 +6544,7 @@
 
 
 	// module
-	exports.push([module.id, ".tile {\n  position: relative;\n  float: left;\n  margin: 10px;\n  padding: 10px;\n  width: 200px;\n  height: 200px;\n  border-radius: 5px;\n  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.4);\n  color: #3c763d;\n  background-color: #dff0d8;\n  border-color: #d6e9c6; }\n  .tile.warning {\n    color: #8a6d3b;\n    background-color: #fcf8e3;\n    border-color: #faebcc; }\n  .tile .close {\n    position: absolute;\n    top: 5px;\n    right: 5px;\n    text-decoration: none;\n    font-size: 24px;\n    font-weight: bold;\n    color: black;\n    border: 1px solid darkgray;\n    border-radius: 5px;\n    padding: 2px;\n    line-height: 18px;\n    background-color: lightgrey; }\n  .tile .amount {\n    text-align: center;\n    font-family: monospace;\n    font-size: 100px;\n    height: 120px;\n    line-height: 120px; }\n  .tile input {\n    width: 100%; }\n", ""]);
+	exports.push([module.id, ".tile {\n  position: relative;\n  float: left;\n  margin: 10px;\n  padding: 10px;\n  width: 200px;\n  height: 170px;\n  border-radius: 5px;\n  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.4);\n  color: #3c763d;\n  background-color: #dff0d8;\n  border-color: #d6e9c6; }\n  .tile.warning {\n    color: #8a6d3b;\n    background-color: #fcf8e3;\n    border-color: #faebcc; }\n  .tile .close {\n    position: absolute;\n    top: 5px;\n    right: 5px;\n    text-decoration: none;\n    font-size: 24px;\n    font-weight: bold;\n    color: black;\n    border: 1px solid darkgray;\n    border-radius: 5px;\n    padding: 2px;\n    line-height: 18px;\n    background-color: lightgrey; }\n  .tile .amount {\n    text-align: center;\n    font-family: monospace;\n    font-size: 100px;\n    height: 120px;\n    line-height: 120px; }\n  .tile input {\n    width: 100%; }\n", ""]);
 
 	// exports
 
