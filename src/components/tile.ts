@@ -44,7 +44,10 @@ export default class Tile extends Component {
 		this.closeSubscription = Observable
 			.fromEvent(this.closeEl, 'click')
 			//.first() // will dispose after the first value
-			.subscribe(() => this.oncloseclick())
+			.subscribe((mouseEvent: MouseEvent) => {
+				mouseEvent.preventDefault();
+				this.oncloseclick()
+			});
 
 		this.rangeSubscription = Observable
 			.fromEvent(this.rangeEl, 'change')
