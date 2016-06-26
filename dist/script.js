@@ -6458,7 +6458,10 @@
 	        this.el.id = "tile_" + this.id;
 	        this.closeSubscription = Observable_1.Observable
 	            .fromEvent(this.closeEl, 'click')
-	            .subscribe(function () { return _this.oncloseclick(); });
+	            .subscribe(function (mouseEvent) {
+	            mouseEvent.preventDefault();
+	            _this.oncloseclick();
+	        });
 	        this.rangeSubscription = Observable_1.Observable
 	            .fromEvent(this.rangeEl, 'change')
 	            .subscribe(function () { return _this.onrangechange(); });
