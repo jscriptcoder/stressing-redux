@@ -11,7 +11,7 @@ appStore.subscribe((newState: TilesGridState, oldState: TilesGridState) => {
 
 			const howMany = newState.length - oldState.length;
 			const sliceIdx = newState.length - howMany;
-			let newTiles = newState.slice(sliceIdx);
+			const newTiles = newState.slice(sliceIdx);
 
 			for(let tile of newTiles) view.addTile(tile);
 

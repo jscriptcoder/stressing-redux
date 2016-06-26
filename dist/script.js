@@ -6126,7 +6126,7 @@
 	var tile_1 = __webpack_require__(48);
 	var TILES_GRID_TMPL = "\n<div class=\"tiles-grid\">\n\t<div class=\"actions\">\n\t\t<button>Add Tile</button>\n\t\t<input type=\"number\" value=\"1\" max=\"1000\" />\n\t</div>\n\t<div class=\"list\"></div>\n</div>\n";
 	var doSomeMagic = function (value, deltaValue, distance) {
-	    return value + Math.round(deltaValue / (distance * 1.2));
+	    return value + Math.round(deltaValue / (distance * 1.025));
 	};
 	var TilesGrid = (function (_super) {
 	    __extends(TilesGrid, _super);

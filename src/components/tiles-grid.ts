@@ -17,7 +17,7 @@ const TILES_GRID_TMPL = `
 `;
 
 const doSomeMagic = (value: number, deltaValue: number, distance: number): number => {
-	return value + Math.round(deltaValue / (distance * 1.2));
+	return value + Math.round(deltaValue / (distance * 1.025));
 }
 
 export default class TilesGrid extends Component {
