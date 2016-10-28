@@ -3,7 +3,7 @@ My second attempt to implement a redux application. Testing a little bit the per
 
 The program is writen TypeScript using ES6 Module System, built with Webpack, and has RxJS and Redux as main dependencies.
 
-[Click here for demo](https://limbo-africa.codio.io/)
+[Click here for demo](https://jscriptcoder.github.io/stressing-redux/)
 
 ## Download source
 Open a terminal or command line and run following commands:
